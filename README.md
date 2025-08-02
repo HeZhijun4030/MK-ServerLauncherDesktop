@@ -1,8 +1,8 @@
-<h3 style="font-size: 24px" align="center">系列 III · 第二幕</h3>
-<h1 style="font-size: 32px; font-weight: bold" align="center">WIP - MK-ServerLauncher</h1>
 
-<p align="center">The MultiPlatform Application to Manage your Minecraft Dedicated Servers</p>
-<p align="center">一个用于管理 Minecraft 服务端的多平台应用</p>
+<h1 style="font-size: 32px; font-weight: bold" align="center">WIP - MK-ServerLauncher - Desktop</h1>
+
+<p align="center">The MultiPlatform Application to Manage your Minecraft Dedicated Servers (but deskop）</p>
+<p align="center">一个用于管理 Minecraft 服务端的多平台应用(但是桌面版)</p>
 
 
 <div align="center">
@@ -23,6 +23,22 @@
 
 ---
 
-<div align="center">
-<a href="https://mucloudofficial.github.io/MuCloudProjectDoc/mksl-main.html">&gt;&gt;&gt; 项目文档 &lt;&lt;&lt;</a>
-</div>
+# CodeManStudio
+
+A desktop MK-ServerLauncher application built on the PySide2 framework. IDK if I'll continue developing it long-term, but hey! It's already quite feature-rich.
+
+## Future Plans
+(maybe)
+- Essential Cython integration
+
+- Visualized data platform
+
+- Console interface
+
+*(Implementation depends on whether MuCloud completes these features first - the core system remains a WIP)*
+
+## Require
+**Python 3.10 or above**
+~~~ bash
+pip pyside2
+~~~
