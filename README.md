@@ -28,17 +28,19 @@
 A desktop MK-ServerLauncher application built on the PySide2 framework. IDK if I'll continue developing it long-term, but hey! It's already quite feature-rich.
 
 ## Future Plans
-(maybe)
+
 - Essential Cython integration
 
 - Visualized data platform
 
 - Console interface
 
+(maybe)
+
 *(Implementation depends on whether MuCloud completes these features first - the core system remains a WIP)*
 
 ## Require
 **Python 3.10 or above**
 ~~~ bash
-pip pyside2
+pip install pyside2
 ~~~
