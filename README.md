@@ -42,5 +42,5 @@ A desktop MK-ServerLauncher application built on the PySide2 framework. IDK if I
 ## Require
 **Python 3.10 or above**
 ~~~ bash
-pip install pyside2
+pip install -r pyproject.toml
 ~~~

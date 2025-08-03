@@ -43,7 +43,7 @@
        <string/>
       </property>
       <property name="pixmap">
-       <pixmap resource="res.qrc">:/res/Copyright_He.png</pixmap>
+       <pixmap resource="client_Res.qrc">:/res/Copyright_He.png</pixmap>
       </property>
      </widget>
     </item>
@@ -51,6 +51,7 @@
   </widget>
  </widget>
  <resources>
+  <include location="client_Res.qrc"/>
   <include location="res.qrc"/>
  </resources>
  <connections/>

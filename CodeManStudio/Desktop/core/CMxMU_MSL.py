@@ -1,6 +1,6 @@
 from PySide2.QtWidgets import QApplication, QMainWindow
-from client import Ui_Form
-
+from client_UI import Ui_Form
+import Api
 class Client(QMainWindow):
     def __init__(self):
         super().__init__()
