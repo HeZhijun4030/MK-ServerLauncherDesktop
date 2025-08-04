@@ -1,11 +1,11 @@
 [build-system]
-requires = ["setuptools>=52", "wheel","cython>=3.0.0","pyside2>=5.15.2"]
+requires = ["setuptools>=52", "wheel","cython>=3.0.0","pyside2"]
 build-backend = "setuptools.build_meta"
 
 
 [project]
 name = "MK-ServerLauncher-Desktop"
-version = "WIP-0.0.2"
+version = "0.0.2.dev0" 
 description = "MK-ServerLauncher Desktop version"
 authors = [{name="HeZhijun4030", email="zhijun4030@outlook.com"}]
 requires-python = ">=3.10"

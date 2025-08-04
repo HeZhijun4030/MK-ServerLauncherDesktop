@@ -44,7 +44,8 @@ MK-ServerLauncherDesktop\CodeManStudio\Desktop\src\core\CMxMU_MSL.py
 *(Implementation depends on whether MuCloud completes these features first - the core system remains a WIP)*
 
 ## Require
-**Python 3.10 or above**
+**Warning, pyside2 is no longer supported, I recommend you to use python3.10.x development environment (VM), we will upgrade to pyside6 supported by python version 3.11 or above in the future**
+**警告，pyside2已经不再受支持，我建议你使用python3.10.x的开发环境(VM),未来我们会升级为python 3.11以上版本支持的pyside6**
 ~~~ bash
-pip install -r pyproject.toml
+pip install -e .
 ~~~
