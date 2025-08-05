@@ -23,17 +23,24 @@
 
 ---
 
+<div align="center">
+  
 # CodeManStudio
 <img alt="Static Badge" src="https://img.shields.io/badge/Python-3.10.11-gray?style=flat&logo=python&logoColor=green&labelColor=blue">
 <img alt="Static Badge" src="https://img.shields.io/badge/ython-3.0.0-gray?style=flat&logo=C&logoColor=yellow&labelColor=blue">
 <img alt="Static Badge" src="https://img.shields.io/badge/Pyside-5.15.2-gray?style=flat&logo=qt&logoColor=green&labelColor=blue">
+<img alt="Static Badge" src="https://img.shields.io/badge/++-11-gray?style=flat&logo=c&logoColor=white&labelColor=blue">
+<img alt="Static Badge" src="https://img.shields.io/badge/Pybind11-3.0.0-gray?style=flat&logo=c&logoColor=green&labelColor=blue">
+</div><br/>
 
 A desktop MK-ServerLauncher application built on the PySide2 framework. IDK if I'll continue developing it long-term, but hey! It's already quite feature-rich.
+
+
 ## Main file
 MK-ServerLauncherDesktop\CodeManStudio\Desktop\src\core\CMxMU_MSL.py
 ## Future Plans
 
-- Essential Cython integration (**maybe 乄**)
+- Essential Cython integration (**fucked😇***May be enabled*)
 
 - Visualized data platform
 
