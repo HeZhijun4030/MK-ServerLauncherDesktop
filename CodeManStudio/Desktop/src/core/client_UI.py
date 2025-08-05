@@ -12,88 +12,100 @@ from PySide2.QtCore import *
 from PySide2.QtGui import *
 from PySide2.QtWidgets import *
 
+
 import client_Res
 
 class Ui_Form(object):
     def setupUi(self, Form):
         if not Form.objectName():
             Form.setObjectName(u"Form")
-        Form.resize(820, 558)
-        self.verticalLayoutWidget = QWidget(Form)
-        self.verticalLayoutWidget.setObjectName(u"verticalLayoutWidget")
-        self.verticalLayoutWidget.setGeometry(QRect(0, 0, 229, 153))
-        self.verticalLayout = QVBoxLayout(self.verticalLayoutWidget)
-        self.verticalLayout.setObjectName(u"verticalLayout")
-        self.verticalLayout.setContentsMargins(0, 0, 0, 0)
-        self.label = QLabel(self.verticalLayoutWidget)
-        self.label.setObjectName(u"label")
+        Form.setWindowModality(Qt.NonModal)
+        Form.setEnabled(True)
+        Form.resize(1280, 720)
+        self.verticalLayoutWidget_3 = QWidget(Form)
+        self.verticalLayoutWidget_3.setObjectName(u"verticalLayoutWidget_3")
+        self.verticalLayoutWidget_3.setGeometry(QRect(0, 40, 131, 681))
+        self.verticalLayout_3 = QVBoxLayout(self.verticalLayoutWidget_3)
+        self.verticalLayout_3.setObjectName(u"verticalLayout_3")
+        self.verticalLayout_3.setContentsMargins(0, 0, 0, 0)
+        self.overview = QPushButton(self.verticalLayoutWidget_3)
+        self.overview.setObjectName(u"overview")
         font = QFont()
         font.setFamily(u"\u5fae\u8f6f\u96c5\u9ed1")
         font.setBold(True)
         font.setWeight(75)
-        self.label.setFont(font)
+        self.overview.setFont(font)
 
-        self.verticalLayout.addWidget(self.label)
+        self.verticalLayout_3.addWidget(self.overview)
 
-        self.label_2 = QLabel(self.verticalLayoutWidget)
+        self.server = QPushButton(self.verticalLayoutWidget_3)
+        self.server.setObjectName(u"server")
+        self.server.setFont(font)
+
+        self.verticalLayout_3.addWidget(self.server)
+
+        self.environment = QPushButton(self.verticalLayoutWidget_3)
+        self.environment.setObjectName(u"environment")
+        self.environment.setFont(font)
+
+        self.verticalLayout_3.addWidget(self.environment)
+
+        self.pushButton = QPushButton(self.verticalLayoutWidget_3)
+        self.pushButton.setObjectName(u"pushButton")
+        self.pushButton.setFont(font)
+
+        self.verticalLayout_3.addWidget(self.pushButton)
+
+        self.horizontalLayoutWidget = QWidget(Form)
+        self.horizontalLayoutWidget.setObjectName(u"horizontalLayoutWidget")
+        self.horizontalLayoutWidget.setGeometry(QRect(0, 0, 361, 41))
+        self.horizontalLayout = QHBoxLayout(self.horizontalLayoutWidget)
+        self.horizontalLayout.setObjectName(u"horizontalLayout")
+        self.horizontalLayout.setContentsMargins(0, 0, 0, 0)
+        self.label_2 = QLabel(self.horizontalLayoutWidget)
         self.label_2.setObjectName(u"label_2")
         self.label_2.setPixmap(QPixmap(u":/res/Copyright_He.png"))
 
-        self.verticalLayout.addWidget(self.label_2)
+        self.horizontalLayout.addWidget(self.label_2)
 
-        self.verticalLayoutWidget_2 = QWidget(Form)
-        self.verticalLayoutWidget_2.setObjectName(u"verticalLayoutWidget_2")
-        self.verticalLayoutWidget_2.setGeometry(QRect(230, 0, 591, 481))
-        self.verticalLayout_2 = QVBoxLayout(self.verticalLayoutWidget_2)
-        self.verticalLayout_2.setObjectName(u"verticalLayout_2")
-        self.verticalLayout_2.setContentsMargins(0, 0, 0, 0)
-        self.console = QPlainTextEdit(self.verticalLayoutWidget_2)
-        self.console.setObjectName(u"console")
+        self.label = QLabel(self.horizontalLayoutWidget)
+        self.label.setObjectName(u"label")
+        self.label.setFont(font)
 
-        self.verticalLayout_2.addWidget(self.console)
+        self.horizontalLayout.addWidget(self.label)
 
-        self.command_input = QLineEdit(self.verticalLayoutWidget_2)
-        self.command_input.setObjectName(u"command_input")
-        sizePolicy = QSizePolicy(QSizePolicy.Expanding, QSizePolicy.Fixed)
-        sizePolicy.setHorizontalStretch(0)
-        sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.command_input.sizePolicy().hasHeightForWidth())
-        self.command_input.setSizePolicy(sizePolicy)
-        font1 = QFont()
-        font1.setFamily(u"\u5fae\u8f6f\u96c5\u9ed1")
-        self.command_input.setFont(font1)
-
-        self.verticalLayout_2.addWidget(self.command_input)
-
-        self.verticalLayoutWidget_3 = QWidget(Form)
-        self.verticalLayoutWidget_3.setObjectName(u"verticalLayoutWidget_3")
-        self.verticalLayoutWidget_3.setGeometry(QRect(0, 150, 160, 111))
-        self.verticalLayout_3 = QVBoxLayout(self.verticalLayoutWidget_3)
-        self.verticalLayout_3.setObjectName(u"verticalLayout_3")
-        self.verticalLayout_3.setContentsMargins(0, 0, 0, 0)
-        self.Start = QPushButton(self.verticalLayoutWidget_3)
-        self.Start.setObjectName(u"Start")
-        self.Start.setFont(font)
-
-        self.verticalLayout_3.addWidget(self.Start)
-
-        self.Stop = QPushButton(self.verticalLayoutWidget_3)
-        self.Stop.setObjectName(u"Stop")
-        self.Stop.setFont(font)
-
-        self.verticalLayout_3.addWidget(self.Stop)
-
+        self.frame = QFrame(Form)
+        self.frame.setObjectName(u"frame")
+        self.frame.setGeometry(QRect(130, 40, 1151, 681))
+        self.frame.setFrameShape(QFrame.StyledPanel)
+        self.frame.setFrameShadow(QFrame.Raised)
+        self.stackedWidget = QStackedWidget(self.frame)
+        self.stackedWidget.setObjectName(u"stackedWidget")
+        self.stackedWidget.setGeometry(QRect(0, -1, 1151, 681))
+        self.stackedWidget.setFrameShape(QFrame.StyledPanel)
+        self.stackedWidget.setFrameShadow(QFrame.Plain)
+        self.page_3 = QWidget()
+        self.page_3.setObjectName(u"page_3")
+        self.stackedWidget.addWidget(self.page_3)
+        self.page_4 = QWidget()
+        self.page_4.setObjectName(u"page_4")
+        self.stackedWidget.addWidget(self.page_4)
 
         self.retranslateUi(Form)
+
+        self.stackedWidget.setCurrentIndex(0)
+
 
         QMetaObject.connectSlotsByName(Form)
     # setupUi
 
     def retranslateUi(self, Form):
         Form.setWindowTitle(QCoreApplication.translate("Form", u"Form", None))
-        self.label.setText(QCoreApplication.translate("Form", u"\u53cd\u6b63\u662fMK-ServerLauncher\u684c\u9762\u7248\u5c31\u5bf9\u4e86", None))
+        self.overview.setText(QCoreApplication.translate("Form", u"Overview", None))
+        self.server.setText(QCoreApplication.translate("Form", u"Server", None))
+        self.environment.setText(QCoreApplication.translate("Form", u"Environment", None))
+        self.pushButton.setText(QCoreApplication.translate("Form", u"About", None))
         self.label_2.setText("")
-        self.Start.setText(QCoreApplication.translate("Form", u"Start", None))
-        self.Stop.setText(QCoreApplication.translate("Form", u"Stop", None))
+        self.label.setText(QCoreApplication.translate("Form", u"\u53cd\u6b63\u662fMK-ServerLauncher\u684c\u9762\u7248\u5c31\u5bf9\u4e86", None))
     # retranslateUi
 
