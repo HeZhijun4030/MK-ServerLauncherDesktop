@@ -1,78 +1,106 @@
+# tcp_server_pkg/server.py
 import json
 import socket
+import threading
 import logging
 
-console_handler = logging.StreamHandler()
-console_handler.setLevel(logging.INFO)
-logger = logging.getLogger("TCP_service")
-logger.setLevel(logging.INFO)
-console_handler = logging.StreamHandler()
-console_handler.setLevel(logging.INFO)
-formatter = logging.Formatter('[%(asctime)s][%(name)s][%(levelname)s]%(message)s', '%H:%M:%S')
-console_handler.setFormatter(formatter)
-logger.addHandler(console_handler)
 
+class JSONTCPServer:
+    def __init__(self, host='0.0.0.0', port=8080):
+        self.host = host
+        self.port = port
+        self._socket = None
+        self._running = False
+        self._thread = None
+        self._callback = None
+        self.logger = logging.getLogger('TCP_Server')
+        self.logger.setLevel(logging.INFO)
+        formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 
-class tcp_Sender:
-    def __init__(self, ip="127.0.0.1", port=8080, timeout=2.0,buffer_size=1024):
-        self.buffer_size = buffer_size
-        self.ip = ip  # 默认本地地址
-        self.port = port  # 默认端口
-        self.timeout = timeout  # 接收超时时间
+        if not self.logger.handlers:
+            handler = logging.StreamHandler()
+            handler.setFormatter(formatter)
+            self.logger.addHandler(handler)
 
+    def set_callback(self, callback):
+        # 设置回调函数 也就是说如果有数据到来，则会调用这个函数进行处理
+        self._callback = callback
 
-    def send(self, msg: bytes):
-        with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+    def start(self):
+        if self._running:
+            self.logger.warning("服务器已经在运行")
+            return False
+
+        try:
+            self._socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+            self._socket.bind((self.host, self.port))
+            self._socket.listen(5)
+            self._running = True
+
+            self._thread = threading.Thread(target=self._run_server, daemon=True)
+            self._thread.start()
+
+            self.logger.info(f"服务器启动成功，监听 {self.host}:{self.port}")
+            return True
+        except Exception as e:
+            self.logger.error(f"服务器启动失败: {str(e)}")
+            return False
+
+    def _run_server(self):
+        #主循环
+        while self._running:
             try:
-                s.connect((self.ip, self.port))
-                logger.info(f"已连接 {self.ip}:{self.port}")
-                s.sendall(msg)
-                logger.info(f"已发送消息到 {self.ip}:{self.port}")
-                s.settimeout(self.timeout)
+                client_socket, addr = self._socket.accept()
+                self.logger.debug(f"新客户端连接: {addr}")
+
+                client_thread = threading.Thread(
+                    target=self._handle_client,
+                    args=(client_socket, addr),
+                    daemon=True
+                )
+                client_thread.start()
+
             except socket.timeout:
-                logger.error("等待回复超时")
-                return None
-            except ConnectionResetError:
-                logger.error("连接被远程主机重置")
-                return None
+                continue
+            except Exception as e:
+                if self._running:
+                    self.logger.error(f"接受连接错误: {str(e)}")
+
+    def _handle_client(self, client_socket, addr):
+        # 处理客户端请求
+        try:
+            data = client_socket.recv(4096)
+            if not data:
+                self.logger.debug(f"客户端 {addr} 断开连接")
+                return
 
             try:
-                data= s.recv(self.buffer_size)
-                logger.info(f"收到回复: {data.decode()}")
-                return data
-            except socket.timeout:
-                logger.error("等待回复超时")
-                return None
-            except ConnectionResetError:
-                logger.error("连接被远程主机重置")
-                return None
+                json_data = json.loads(data.decode('utf-8'))
+                self.logger.info(f"收到来自 {addr} 的数据: {json_data}")
 
-    def send_json(self, msg):
-        with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
-            try:
-                s.connect((self.ip, self.port))
-                logger.info(f"已连接 {self.ip}:{self.port}")
-                s.sendall(json.dumps(msg))
-                logger.info(f"已发送消息到 {self.ip}:{self.port}")
-                s.settimeout(self.timeout)
-            except socket.timeout:
-                logger.error("等待回复超时")
-                return None
-            except ConnectionResetError:
-                logger.error("连接被远程主机重置")
-                return None
+                # 如果有设置回调函数则调用
+                if self._callback:
+                    self._callback(json_data)
 
-            try:
-                data = s.recv(self.buffer_size)
-                logger.info(f"收到回复: {data.decode()}")
-                return data
-            except socket.timeout:
-                logger.error("等待回复超时")
-                return None
-            except ConnectionResetError:
-                logger.error("连接被远程主机重置")
-                return None
+                # 发送响应
+                response = {"status": "success", "message": "数据接收成功"}
+                client_socket.sendall(json.dumps(response).encode('utf-8'))
 
-    def __del__(self):
-        if hasattr(self, 'sock'):
-            self.sock.close()
+            except json.JSONDecodeError:
+                error_msg = "无效的JSON格式"
+                self.logger.error(error_msg)
+                response = {"status": "error", "message": error_msg}
+                client_socket.sendall(json.dumps(response).encode('utf-8'))
+
+        except Exception as e:
+            self.logger.error(f"处理客户端 {addr} 时出错: {str(e)}")
+        finally:
+            client_socket.close()
+
+    def stop(self):
+        """停止服务器"""
+        if self._running:
+            self._running = False
+            if self._socket:
+                self._socket.close()
+            self.logger.info("服务器已停止")

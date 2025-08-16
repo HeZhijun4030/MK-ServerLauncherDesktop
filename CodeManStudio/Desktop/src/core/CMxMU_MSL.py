@@ -24,18 +24,32 @@ QLineEdit {
     border: 1px solid #444;
 }
 """
+
+
 class Client(QMainWindow):
     def __init__(self):
-
-        #UI
+        # UI
         super().__init__()
         self.ui = Ui_Form()
         self.ui.setupUi(self)
-        #属性
+        # 属性
         self.server_process = QProcess()
         self.codec = QTextCodec.codecForName("UTF-8")
 
         self.setWindowTitle("MK-ServerLauncher 桌面版")
+
+        # 后端服务器
+
+        self.server = Api.TCP_Func.JSONTCPServer(('127.0.0.1', 8000))
+
+        self.server.set_callback(self.handle_server_message) # 设置回调函数
+
+        self.server.start()
+
+    def handle_server_message(self, data):
+        pass
+        # 回调函数，处理服务器发来的消息，详细见Api.TCP_Func.JSONTCPServer中的set_callback
+        # self.text_area.append(data)
 
 
 if __name__ == "__main__":
