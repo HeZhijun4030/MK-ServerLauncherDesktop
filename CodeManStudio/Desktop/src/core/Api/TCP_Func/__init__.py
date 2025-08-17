@@ -15,7 +15,7 @@ class JSONTCPServer:
         self._callback = None
         self.logger = logging.getLogger('TCP_Server')
         self.logger.setLevel(logging.INFO)
-        formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+        formatter = logging.Formatter('[%(levelname)s]%(name)s:%(message)s')
 
         if not self.logger.handlers:
             handler = logging.StreamHandler()
@@ -43,7 +43,7 @@ class JSONTCPServer:
             self.logger.info(f"服务器启动成功，监听 {self.host}:{self.port}")
             return True
         except Exception as e:
-            self.logger.error(f"服务器启动失败: {str(e)}")
+            self.logger.error(f"Server start error: {str(e)}")
             return False
 
     def _run_server(self):
@@ -98,7 +98,6 @@ class JSONTCPServer:
             client_socket.close()
 
     def stop(self):
-        """停止服务器"""
         if self._running:
             self._running = False
             if self._socket:

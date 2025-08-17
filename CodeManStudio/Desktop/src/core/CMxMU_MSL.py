@@ -1,9 +1,10 @@
+import logging
 import os
 
 from PySide2.QtCore import QTextCodec, QProcess, Qt
 from PySide2.QtWidgets import QApplication, QMainWindow, QMessageBox
 from client_UI import Ui_Form
-import Api
+import Api.TCP_Func
 
 dark_stylesheet = """
 QWidget {
@@ -24,10 +25,17 @@ QLineEdit {
     border: 1px solid #444;
 }
 """
+logger = logging.getLogger('Application')
+logger.setLevel(logging.INFO)
+formatter = logging.Formatter('[%(levelname)s]%(name)s:%(message)s')
 
-
+if not logger.handlers:
+    handler = logging.StreamHandler()
+    handler.setFormatter(formatter)
+    logger.addHandler(handler)
 class Client(QMainWindow):
     def __init__(self):
+
         # UI
         super().__init__()
         self.ui = Ui_Form()
@@ -46,6 +54,8 @@ class Client(QMainWindow):
 
         self.server.start()
 
+
+
     def handle_server_message(self, data):
         pass
         # 回调函数，处理服务器发来的消息，详细见Api.TCP_Func.JSONTCPServer中的set_callback
@@ -56,6 +66,10 @@ if __name__ == "__main__":
     app = QApplication([])
     app.setStyleSheet(dark_stylesheet)
 
+
     window = Client()
+
     window.show()
+    logger.info("Application init success")
+
     app.exec_()

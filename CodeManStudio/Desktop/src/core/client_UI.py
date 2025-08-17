@@ -12,7 +12,6 @@ from PySide2.QtCore import *
 from PySide2.QtGui import *
 from PySide2.QtWidgets import *
 
-
 import client_Res
 
 class Ui_Form(object):
@@ -58,42 +57,42 @@ class Ui_Form(object):
 
         self.horizontalLayoutWidget = QWidget(Form)
         self.horizontalLayoutWidget.setObjectName(u"horizontalLayoutWidget")
-        self.horizontalLayoutWidget.setGeometry(QRect(0, 0, 361, 41))
+        self.horizontalLayoutWidget.setGeometry(QRect(0, 0, 363, 41))
         self.horizontalLayout = QHBoxLayout(self.horizontalLayoutWidget)
         self.horizontalLayout.setObjectName(u"horizontalLayout")
         self.horizontalLayout.setContentsMargins(0, 0, 0, 0)
-        self.label_2 = QLabel(self.horizontalLayoutWidget)
-        self.label_2.setObjectName(u"label_2")
-        self.label_2.setPixmap(QPixmap(u":/res/Copyright_He.png"))
+        self.info2 = QLabel(self.horizontalLayoutWidget)
+        self.info2.setObjectName(u"info2")
+        self.info2.setPixmap(QPixmap(u":/res/Copyright_He.png"))
 
-        self.horizontalLayout.addWidget(self.label_2)
+        self.horizontalLayout.addWidget(self.info2)
 
-        self.label = QLabel(self.horizontalLayoutWidget)
-        self.label.setObjectName(u"label")
-        self.label.setFont(font)
+        self.info1 = QLabel(self.horizontalLayoutWidget)
+        self.info1.setObjectName(u"info1")
+        self.info1.setFont(font)
 
-        self.horizontalLayout.addWidget(self.label)
+        self.horizontalLayout.addWidget(self.info1)
 
         self.frame = QFrame(Form)
         self.frame.setObjectName(u"frame")
         self.frame.setGeometry(QRect(130, 40, 1151, 681))
         self.frame.setFrameShape(QFrame.StyledPanel)
         self.frame.setFrameShadow(QFrame.Raised)
-        self.stackedWidget = QStackedWidget(self.frame)
-        self.stackedWidget.setObjectName(u"stackedWidget")
-        self.stackedWidget.setGeometry(QRect(0, -1, 1151, 681))
-        self.stackedWidget.setFrameShape(QFrame.StyledPanel)
-        self.stackedWidget.setFrameShadow(QFrame.Plain)
-        self.page_3 = QWidget()
-        self.page_3.setObjectName(u"page_3")
-        self.stackedWidget.addWidget(self.page_3)
-        self.page_4 = QWidget()
-        self.page_4.setObjectName(u"page_4")
-        self.stackedWidget.addWidget(self.page_4)
+        self.main = QStackedWidget(self.frame)
+        self.main.setObjectName(u"main")
+        self.main.setGeometry(QRect(0, -1, 1151, 681))
+        self.main.setFrameShape(QFrame.StyledPanel)
+        self.main.setFrameShadow(QFrame.Plain)
+        self.Overview = QWidget()
+        self.Overview.setObjectName(u"Overview")
+        self.main.addWidget(self.Overview)
+        self.Server = QWidget()
+        self.Server.setObjectName(u"Server")
+        self.main.addWidget(self.Server)
 
         self.retranslateUi(Form)
 
-        self.stackedWidget.setCurrentIndex(0)
+        self.main.setCurrentIndex(1)
 
 
         QMetaObject.connectSlotsByName(Form)
@@ -105,7 +104,7 @@ class Ui_Form(object):
         self.server.setText(QCoreApplication.translate("Form", u"Server", None))
         self.environment.setText(QCoreApplication.translate("Form", u"Environment", None))
         self.pushButton.setText(QCoreApplication.translate("Form", u"About", None))
-        self.label_2.setText("")
-        self.label.setText(QCoreApplication.translate("Form", u"\u53cd\u6b63\u662fMK-ServerLauncher\u684c\u9762\u7248\u5c31\u5bf9\u4e86", None))
+        self.info2.setText("")
+        self.info1.setText(QCoreApplication.translate("Form", u"\u53cd\u6b63\u662fMK-ServerLauncher\u684c\u9762\u7248\u5c31\u5bf9\u4e86", None))
     # retranslateUi
 
