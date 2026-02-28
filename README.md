@@ -26,24 +26,27 @@
 <div align="center">
   
 # CodeManStudio
-<img alt="Static Badge" src="https://img.shields.io/badge/Python-3.10.11-gray?style=flat&logo=python&logoColor=green&labelColor=blue">
-<img alt="Static Badge" src="https://img.shields.io/badge/ython-3.0.0-gray?style=flat&logo=C&logoColor=yellow&labelColor=blue">
-<img alt="Static Badge" src="https://img.shields.io/badge/Pyside2-5.15.2-gray?style=flat&logo=qt&logoColor=green&labelColor=blue">
+<img alt="Static Badge" src="https://img.shields.io/badge/Qt-6.8.3-gray?style=flat&logo=qt&logoColor=green&labelColor=blue">
 </div><br/>
 
 <div align="center">
-<img alt="Static Badge" src="https://img.shields.io/badge/++-11-gray?style=flat&logo=c&logoColor=white&labelColor=blue">
-<img alt="Static Badge" src="https://img.shields.io/badge/Pybind11-3.0.0-gray?style=flat&logo=c&logoColor=green&labelColor=blue">
+<img alt="Static Badge" src="https://img.shields.io/badge/++-17-gray?style=flat&logo=c&logoColor=white&labelColor=blue">
+
 </div><br/>
 
-A desktop MK-ServerLauncher application built on the PySide2 framework. IDK if I'll continue developing it long-term, but hey! It's already quite feature-rich.
+A desktop MK-ServerLauncher application built on the Qt6 framework. IDK if I'll continue developing it long-term, but hey! idgaf
 
 
 ## Main file
-MK-ServerLauncherDesktop\CodeManStudio\Desktop\src\core\CMxMU_MSL.py
+- Main
+~~~
+MK-ServerLauncherDesktop\CodeManStudio\Desktop\src\main.cpp
+~~~
+
+
 ## Future Plans
 
-- Essential Cython integration (**fucked😇***May be enabled*)
+- MuPacketAPI integration support
 
 - Visualized data platform
 
@@ -54,8 +57,10 @@ MK-ServerLauncherDesktop\CodeManStudio\Desktop\src\core\CMxMU_MSL.py
 *(Implementation depends on whether MuCloud completes these features first - the core system remains a WIP)*
 
 ## Require
-**Warning, pyside2 is no longer supported, I recommend you to use python3.10.x development environment (VM), we will upgrade to pyside6 supported by python version 3.11 or above in the future**
-**警告，pyside2已经不再受支持，我建议你使用python3.10.x的开发环境(VM),未来我们会升级为python 3.11以上版本支持的pyside6**
+- MSVC v143 x86/x64 - VS 2022 (or higher)
+- Cmake 3.20.0 (or higher)
+- Qt 6.8.3
+- spdlog (any version)
 ~~~ bash
-pip install -e .
+vcpkg install spdlog
 ~~~
