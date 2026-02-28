@@ -49,3 +49,46 @@ bin/
 ### Mac OS ###
 .DS_Store
 
+### MuTest ###
+/MuTest/
+
+
+### CodeManStudio ###
+out/
+build/
+*-build/
+debug/
+release/
+*.user
+*.user.*
+CMakeCache.txt
+CMakeFiles/
+cmake_install.cmake
+Makefile
+CMakeUserPresets.json 
+
+*.moc
+moc_*.cpp
+moc_*.h
+qrc_*.cpp
+ui_*.h
+*.autosave
+
+.vs/
+*.sln
+*.vcxproj
+*.vcxproj.filters
+*.vcxproj.user
+*.vcxproj.user.*
+
+
+*.exe
+*.exe.manifest
+*.dll
+*.lib
+*.pdb
+*.ilk
+*.exp
+
+*.log
+spdlog.log

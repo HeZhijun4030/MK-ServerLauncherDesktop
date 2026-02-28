@@ -1,0 +1,95 @@
+package me.mucloud.application.mk.serverlauncher.muenv
+
+import com.google.gson.Gson
+import com.google.gson.GsonBuilder
+import com.google.gson.reflect.TypeToken
+import me.mucloud.application.mk.serverlauncher.muenv.EnvPool.envFile
+import me.mucloud.application.mk.serverlauncher.muenv.EnvPool.jEnvs
+import java.io.File
+import java.io.FileReader
+import java.io.FileWriter
+import java.nio.charset.StandardCharsets
+
+/**
+ *  # Environment Pool
+ *
+ *  Supported to Install/Import/Delete MuEnvironment
+ *
+ *  @since VoidLand V1 | DEV.1
+ *  @author Mu_Cloud
+ */
+object EnvPool {
+
+    private val jEnvs: MutableList<JavaEnvironment> = mutableListOf() // In-Memory storage
+    private val envFile: File = File("env.json") // Persistent storage file
+    
+    init {
+        if(!envFile.exists()) {
+            envFile.createNewFile()
+            FileWriter(envFile).apply { write("[]"); flush() }
+        }
+        scanLocalJavaEnv()
+    }
+
+    /**
+     * # Local Java Environment Scanner
+     *
+     * Scan the System Java Installation as JavaEnvironment named "SysEnv"
+     *
+     * *For now, it will only scan the "JAVA_HOME" system environment to locate the Java Installation in System*
+     *
+     * This Function Implementation may change Frequently
+     */
+    private fun scanLocalJavaEnv(){
+        val sysEnvPath = System.getenv("JAVA_HOME")
+        jEnvs.add(JavaEnvironment("SysEnv", sysEnvPath))
+    }
+
+    /**
+     * Scan JavaEnvironment from env.json in MK-ServerLauncher Installation Folder
+     *
+     * @return List of JavaEnvironment, element deserialized by JavaEnvironmentAdapter
+     */
+    fun scanEnv() {
+        if(envFile.exists()){
+            Gson().fromJson<List<JavaEnvironment>>(
+                FileReader(envFile, StandardCharsets.UTF_8),
+                object : TypeToken<List<JavaEnvironment>>(){}.type
+            ).forEach{ e ->
+                jEnvs.add(e)
+            }
+        }
+    }
+
+    /**
+     * Write [jEnvs] Object to [envFile] by JavaEnvironmentAdapter
+     */
+    fun save(){
+        if(envFile.exists()){
+            FileWriter(envFile, StandardCharsets.UTF_8).apply {
+                write(GsonBuilder()
+                    .registerTypeAdapter(JavaEnvironment::class.java, JavaEnvironmentAdapter)
+                    .setPrettyPrinting()
+                    .create()
+                    .toJson(jEnvs))
+                flush()
+            }
+        }
+    }
+
+    fun getEnv(name: String) = jEnvs.find { it.name == name }
+
+    fun delEnv(envName: String): Boolean{
+        return jEnvs.removeIf { it.name == envName }.also{ save() }
+    }
+
+    fun regEnv(env: JavaEnvironment){
+        jEnvs.find { it.name == env.name || it.getExecFolder() == env.getExecFolder() } ?: {
+            jEnvs.add(env)
+            save()
+        }
+    }
+
+    fun getEnvList(): List<JavaEnvironment> = jEnvs
+
+}
