@@ -12,8 +12,8 @@
 
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
-
-#include <QMainWindow>
+#include "DarkTheme.hpp"
+#include <QWidget>
 #include <QLabel>
 #include "spdlog/spdlog.h"
 #include <memory>
@@ -36,24 +36,7 @@ QT_END_NAMESPACE
  * anyway i like this :/
  */
 namespace CMS {
-    const QString DARK_STYLESHEET = R"(
-QWidget {
-    background-color: #2b2b2b;
-    color: #ffffff;
-    selection-background-color: #3d3d3d;
-    selection-color: #ffffff;
-}
-QMenu::item:selected {
-    background-color: #3d3d3d;
-}
-QPushButton {
-    background-color: #3d3d3d;
-}
-QLineEdit {
-    background-color: #3d3d3d;
-    border: 1px solid #444;
-}
-)";
+
 
 /**
      * @class MainWindow
@@ -66,7 +49,7 @@ QLineEdit {
      *
      * @note 使用 Ui::Form 类来访问 UI 控件*/
 
-    class MainWindow : public QMainWindow
+    class MainWindow : public QWidget
     
     {
         Q_OBJECT    ///<Qt 元对象宏

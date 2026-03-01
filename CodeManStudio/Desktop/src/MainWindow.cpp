@@ -10,12 +10,13 @@
  * 包括窗口初始化、日志设置和资源清理等功能
 */
 
-#include "ui_client_UI.h"  
+#include "ui_Client.h"  
 #include "MainWindow.hpp"
 #include <QVBoxLayout>
 #include <QWidget>
 #include <QDebug>
-
+#include <QButtonGroup>
+#include <QFile>
 namespace CMS {
     /**
      * @brief 构造函数实现
@@ -35,12 +36,32 @@ namespace CMS {
      * @see ~MainWindow() 析构函数负责清理资源
      */
 MainWindow::MainWindow(QWidget* parent, std::shared_ptr<spdlog::logger> logger)
-        : QMainWindow(parent),ui(new Ui::Form),logger_(logger)
+        : QWidget(parent),ui(new Ui::Form),logger_(logger)
 {
         logger_->info("MainWindow Created");
-        setWindowTitle("MK-ServerLauncher Desktop");resize(300, 200);ui->setupUi(this);qApp->setStyleSheet(CMS::DARK_STYLESHEET);
+        setWindowTitle("MK-ServerLauncher Desktop");ui->setupUi(this);
+
         
         //TODO(Hzj) : Actually idk what to do
+        
+        QButtonGroup* buttongroup = new QButtonGroup(this);
+        buttongroup->addButton(ui->btnOverview, 0);
+        buttongroup->addButton(ui->btnServer, 1);
+        buttongroup->addButton(ui->btnEnvironment, 2);
+        buttongroup->addButton(ui->btnAbout, 3);
+        QFile file(":/Dark/darkstyle.qss");
+        if (file.open(QFile::ReadOnly)) {
+            QString styleSheet = QLatin1String(file.readAll());
+            qApp->setStyleSheet(styleSheet);
+            file.close();
+        }
+        else {
+            qDebug() << "Failed to load stylesheet:" << file.errorString();
+        }
+        connect(buttongroup, QOverload<int>::of(&QButtonGroup::idClicked), this, [this](int id) {
+            ui->stackedWidget->setCurrentIndex(id);
+
+            });
 }
 
 MainWindow::~MainWindow()

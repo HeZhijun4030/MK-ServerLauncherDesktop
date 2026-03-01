@@ -3,7 +3,7 @@
  * @brief MK-ServerLauncher 桌面版主程序入口
  * @author CodeManStudio
  * @version ?
- * @date 2026-2-28
+ * @date 2026-02-28
  *
  * @details
  * 该文件是应用程序的入口点，负责初始化Qt环境、
@@ -14,31 +14,39 @@
 #include <QLabel>
 #include "MainWindow.hpp"
 #include "spdlog/sinks/stdout_color_sinks.h"
-
-/**
- * @brief 应用程序入口点
- *
- * 初始化Qt应用程序，设置日志系统，创建并显示主窗口
- * 这是MK-ServerLauncher桌面版的启动入口
- */
+#include "WebSocketManager.hpp"
+ /**
+  * @brief 应用程序入口点
+  *
+  * 初始化Qt应用程序，设置日志系统，创建并显示主窗口
+  * 这是MK-ServerLauncher桌面版的启动入口
+  */
 int main(int argc, char* argv[])
 {
-    //初始化Qt应用程序
-    QApplication app(argc, argv);
+	//TODO(Hzj) : File read
 
-    //使用spdlog的彩色控制台输出，日志器名称为"main"
-    auto MainLogger = spdlog::stdout_color_mt("main");
 
-    app.setApplicationName("MK-ServerLauncher Desktop");
-    app.setOrganizationName("MuVerse / CodeManStudio");
-    app.setApplicationVersion("1.0.0");
+	//初始化Qt应用程序
+	QApplication app(argc, argv);
 
-    //创建主窗口实例，传入日志器
-    //父窗口为nullptr，表示这是一个顶级窗口
-    CMS::MainWindow window(nullptr, MainLogger);
-    window.show();
-    
-    MainLogger->info("Window showed");
 
-    return app.exec();
+
+	//使用spdlog的彩色控制台输出，日志器名称为"main"
+	auto serverLogger = spdlog::stdout_color_mt("server");
+	auto clientLogger = spdlog::stdout_color_mt("client");
+	auto MainLogger = spdlog::stdout_color_mt("main");
+
+	app.setApplicationName("MK-ServerLauncher Desktop");
+	app.setOrganizationName("MuVerse / CodeManStudio");
+	app.setApplicationVersion("1.0.0");
+
+	//创建主窗口实例，传入日志器
+	//父窗口为nullptr，表示这是一个顶级窗口
+	CMS::MainWindow window(nullptr, MainLogger);
+	CMS::WebSocketManager wsManager(&window, 4030, "127.0.0.1", 4030, "", serverLogger, clientLogger);
+	window.show();
+
+	MainLogger->info("Window showed");
+
+	return app.exec();
 }
