@@ -2214,3 +2214,14 @@ PlotWidget {
   /* Fix cut labels in plots #134 */
   padding: 0px;
 }
+
+/* 强制所有控件使用应用程序字体 */
+* {
+    font-family: "JetBrains Mono", "Sarasa Mono SC", "Microsoft YaHei", "Noto Sans SC", sans-serif;
+}
+
+/* 覆盖表头的字体设置 */
+QHeaderView::section {
+    font-size: 10pt;
+    font-family: "JetBrains Mono", "Sarasa Mono SC", "Microsoft YaHei", "Noto Sans SC", sans-serif;
+}

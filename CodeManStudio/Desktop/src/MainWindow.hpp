@@ -12,6 +12,10 @@
 
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
+#include <QFontDatabase>
+#include <QApplication>
+#include <QLatin1String>
+#include <QFont>
 #include "DarkTheme.hpp"
 #include <QWidget>
 #include <QLabel>
@@ -69,6 +73,7 @@ namespace CMS {
         MainWindow(QWidget* parent = nullptr, std::shared_ptr<spdlog::logger> logger = nullptr);~MainWindow();    
     private:        
         std::shared_ptr<spdlog::logger> logger_;Ui::Form* ui; 
+        void setupFonts();
 
     };
 } // namespace CMS
