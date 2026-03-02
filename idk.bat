@@ -1,1 +1,0 @@
-git log --all -p --stat --name-status --pretty=format:"==================================================%nCOMMIT HASH: %H%nABBREV HASH: %h%nTREE HASH: %T%nPARENT HASH: %P%nAUTHOR: %an <%ae>%nAUTHOR DATE: %ad%nCOMMITTER: %cn <%ce>%nCOMMIT DATE: %cd%nSUBJECT: %s%nBODY: %b%nREF NAMES: %d%n--------------------------------------------------" --date=iso > git_history_complete.txt
