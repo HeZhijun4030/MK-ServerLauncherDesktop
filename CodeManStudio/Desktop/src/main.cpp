@@ -38,13 +38,22 @@ int main(int argc, char* argv[])
 
 	app.setApplicationName("MK-ServerLauncher Desktop");
 	app.setOrganizationName("MuVerse / CodeManStudio");
-	app.setApplicationVersion("1.0.0");
+	app.setApplicationVersion("0.0.0-Demo");
 
 	//创建主窗口实例，传入日志器
 	//父窗口为nullptr，表示这是一个顶级窗口
 	CMS::MainWindow window(nullptr, MainLogger);
+	
 	CMS::WebSocketManager wsManager(&window, 4030, "127.0.0.1", 4030, "", serverLogger, clientLogger);
 	window.show();
+	QString idk = R"(# 系统启动
+
+欢迎使用 MK-ServerLauncher
+版本: 其实这只是一个演示版你们知道吗,而且这个界面活不了多久
+
+## 初始化完成
+)";
+	window.PushMessageToMainOverview(idk);
 
 	MainLogger->info("Window showed");
 

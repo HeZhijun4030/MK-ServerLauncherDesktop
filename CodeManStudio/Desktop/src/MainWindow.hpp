@@ -71,8 +71,9 @@ namespace CMS {
         * @see setupLogger()
         */
         MainWindow(QWidget* parent = nullptr, std::shared_ptr<spdlog::logger> logger = nullptr);~MainWindow();    
+        void PushMessageToMainOverview(const QString& message);
     private:        
-        std::shared_ptr<spdlog::logger> logger_;Ui::Form* ui; 
+        std::shared_ptr<spdlog::logger> logger_; Ui::Form* ui; QString OverviewText;
         void setupFonts();
 
     };

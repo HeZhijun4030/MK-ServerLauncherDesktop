@@ -40,6 +40,8 @@ namespace CMS {
 	{
 		setupFonts();
 
+		QString OverviewText = "";
+
 
 
 
@@ -115,5 +117,10 @@ namespace CMS {
 				logger_->warn("Using system fonts (custom fonts not available)");
 			}
 		}
+	}
+	void MainWindow::PushMessageToMainOverview(const QString& message) {
+		if (!OverviewText.isEmpty()) { OverviewText += "\n\n"; }
+		OverviewText += message;
+		ui->textEdit->setMarkdown(OverviewText);
 	}
 } // namespace CMS
