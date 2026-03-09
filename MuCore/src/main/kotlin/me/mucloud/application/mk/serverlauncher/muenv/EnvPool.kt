@@ -1,12 +1,10 @@
 package me.mucloud.application.mk.serverlauncher.muenv
 
-import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.google.gson.reflect.TypeToken
 import me.mucloud.application.mk.serverlauncher.muenv.EnvPool.envFile
 import me.mucloud.application.mk.serverlauncher.muenv.EnvPool.jEnvs
 import java.io.File
-import java.io.FileReader
 import java.io.FileWriter
 import java.nio.charset.StandardCharsets
 
@@ -20,15 +18,24 @@ import java.nio.charset.StandardCharsets
  */
 object EnvPool {
 
+    private val gson = GsonBuilder()
+        .setPrettyPrinting()
+        .registerTypeAdapter(JavaEnvironment::class.java, JavaEnvironmentAdapter)
+        .create()
+
     private val jEnvs: MutableList<JavaEnvironment> = mutableListOf() // In-Memory storage
     private val envFile: File = File("env.json") // Persistent storage file
+    private val envFileWriter: FileWriter
     
     init {
         if(!envFile.exists()) {
             envFile.createNewFile()
-            FileWriter(envFile).apply { write("[]"); flush() }
         }
-        scanLocalJavaEnv()
+        envFileWriter = FileWriter(envFile, StandardCharsets.UTF_8)
+        if (!scanLocalJavaEnv()) {
+            envFileWriter.write("[]")
+            envFileWriter.flush()
+        }
     }
 
     /**
@@ -40,9 +47,10 @@ object EnvPool {
      *
      * This Function Implementation may change Frequently
      */
-    private fun scanLocalJavaEnv(){
-        val sysEnvPath = System.getenv("JAVA_HOME")
-        jEnvs.add(JavaEnvironment("SysEnv", sysEnvPath))
+    private fun scanLocalJavaEnv(): Boolean{
+        val sysEnvPath = System.getenv("JAVA_HOME") ?: return false
+        regEnv(JavaEnvironment("SysEnv", sysEnvPath))
+        return true
     }
 
     /**
@@ -52,8 +60,8 @@ object EnvPool {
      */
     fun scanEnv() {
         if(envFile.exists()){
-            Gson().fromJson<List<JavaEnvironment>>(
-                FileReader(envFile, StandardCharsets.UTF_8),
+            gson.fromJson<List<JavaEnvironment>>(
+                envFile.readText(StandardCharsets.UTF_8),
                 object : TypeToken<List<JavaEnvironment>>(){}.type
             ).forEach{ e ->
                 jEnvs.add(e)
@@ -66,14 +74,8 @@ object EnvPool {
      */
     fun save(){
         if(envFile.exists()){
-            FileWriter(envFile, StandardCharsets.UTF_8).apply {
-                write(GsonBuilder()
-                    .registerTypeAdapter(JavaEnvironment::class.java, JavaEnvironmentAdapter)
-                    .setPrettyPrinting()
-                    .create()
-                    .toJson(jEnvs))
-                flush()
-            }
+            envFileWriter.write(gson.toJson(jEnvs, object : TypeToken<List<JavaEnvironment>>(){}.type))
+            envFileWriter.flush()
         }
     }
 
@@ -84,7 +86,8 @@ object EnvPool {
     }
 
     fun regEnv(env: JavaEnvironment){
-        jEnvs.find { it.name == env.name || it.getExecFolder() == env.getExecFolder() } ?: {
+        val target = jEnvs.find { it.name == env.name || it.getExecFolder() == env.getExecFolder() }
+        if (target == null){
             jEnvs.add(env)
             save()
         }
