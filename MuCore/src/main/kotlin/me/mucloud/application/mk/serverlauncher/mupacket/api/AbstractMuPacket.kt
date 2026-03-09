@@ -18,7 +18,7 @@ abstract class AbstractMuPacket(
     protected val type: MuPacketInfo<*>,
 ) : MuPacket {
 
-    final override fun getType(): MuPacketInfo<out MuPacket> = type
+    final override fun getInfo(): MuPacketInfo<out MuPacket> = type
 
     final override fun toJson(): JsonObject = JsonObject().apply {
         addProperty("MP_ID", type.pid)

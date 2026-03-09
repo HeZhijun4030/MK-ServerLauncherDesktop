@@ -23,7 +23,7 @@ interface MuPacket {
      * @see toJson
      * @since RainyZone V1 | DEV.1
      */
-    fun getType(): MuPacketInfo<out MuPacket>
+    fun getInfo(): MuPacketInfo<out MuPacket>
 
     /**
      * ### MuPacket Customized Data
