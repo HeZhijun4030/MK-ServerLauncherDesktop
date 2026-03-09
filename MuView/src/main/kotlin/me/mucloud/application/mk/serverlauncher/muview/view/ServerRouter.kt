@@ -10,12 +10,16 @@ import io.ktor.server.routing.*
 import me.mucloud.application.mk.serverlauncher.muenv.EnvPool
 import me.mucloud.application.mk.serverlauncher.muserver.MCJEServer
 import me.mucloud.application.mk.serverlauncher.muserver.ServerPool
+import me.mucloud.application.mk.serverlauncher.muview.MuView
 import java.io.File
 import java.util.*
 import java.util.jar.JarFile
 
 fun Application.initServerRoute() {
     routing {
+        get("muclose"){
+            MuView.stop()
+        }
         route("api/v1/server") {
             val sp = ServerPool
             get("availableType") {
