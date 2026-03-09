@@ -13,15 +13,25 @@ class MuConfiguration{
         .autoreload().sync()
         .build()
 
-    var version: Int = configBase.getIntOrElse("ConfigVersion", 0)
-    var serverFolder: String = configBase.getOrElse("ServerFolderPath", "servers")
-    var logFolder: String = configBase.getOrElse("LogFolderPath", "logs")
-    var muCorePort: Int = configBase.getIntOrElse("MuCorePort", 20038)
-    var muLinkPort: Int = configBase.getIntOrElse("MuLinkPort", 20039)
-    var systemMonitorInterval: Int = configBase.getIntOrElse("SystemMonitorInterval", 3)
+    var version: Int
+    var serverFolder: String
+    var logFolder: String
+    var muCorePort: Int
+    var systemMonitorInterval: Int
 
     init{
         configBase.load()
+
+        version = configBase.getInt("ConfigVersion")
+        serverFolder = configBase.get("ServerFolderPath")
+        logFolder = configBase.get("LogFolderPath")
+        muCorePort = configBase.getInt("MuCorePort")
+        systemMonitorInterval = configBase.getInt("SystemMonitorInterval")
+
+        verifyFolders()
+    }
+
+    private fun verifyFolders(){
         if(!getServerFolder().exists()) getServerFolder().mkdirs()
         if(!getLogFolder().exists()) getLogFolder().mkdirs()
     }
