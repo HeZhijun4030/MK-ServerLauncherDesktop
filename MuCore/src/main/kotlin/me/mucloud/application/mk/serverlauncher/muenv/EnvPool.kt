@@ -2,10 +2,10 @@ package me.mucloud.application.mk.serverlauncher.muenv
 
 import com.google.gson.GsonBuilder
 import com.google.gson.reflect.TypeToken
+import me.mucloud.application.mk.serverlauncher.mucore.external.MuLogger.warn
 import me.mucloud.application.mk.serverlauncher.muenv.EnvPool.envFile
 import me.mucloud.application.mk.serverlauncher.muenv.EnvPool.jEnvs
 import java.io.File
-import java.io.FileWriter
 import java.nio.charset.StandardCharsets
 
 /**
@@ -25,16 +25,14 @@ object EnvPool {
 
     private val jEnvs: MutableList<JavaEnvironment> = mutableListOf() // In-Memory storage
     private val envFile: File = File("env.json") // Persistent storage file
-    private val envFileWriter: FileWriter
     
     init {
         if(!envFile.exists()) {
             envFile.createNewFile()
         }
-        envFileWriter = FileWriter(envFile, StandardCharsets.UTF_8)
+        scanRuntimeJavaEnv()
         if (!scanLocalJavaEnv()) {
-            envFileWriter.write("[]")
-            envFileWriter.flush()
+            envFile.writeText("[]")
         }
     }
 
@@ -51,6 +49,14 @@ object EnvPool {
         val sysEnvPath = System.getenv("JAVA_HOME") ?: return false
         regEnv(JavaEnvironment("SysEnv", sysEnvPath))
         return true
+    }
+
+    private fun scanRuntimeJavaEnv(){
+        val runtime = System.getProperty("java.home")
+        if(runtime == null){
+            warn("Cannot get Java Runtime Environment in using")
+        }
+        regEnv(JavaEnvironment("Runtime", runtime))
     }
 
     /**
@@ -74,8 +80,7 @@ object EnvPool {
      */
     fun save(){
         if(envFile.exists()){
-            envFileWriter.write(gson.toJson(jEnvs, object : TypeToken<List<JavaEnvironment>>(){}.type))
-            envFileWriter.flush()
+            envFile.writeText(gson.toJson(jEnvs, object : TypeToken<List<JavaEnvironment>>(){}.type))
         }
     }
 
