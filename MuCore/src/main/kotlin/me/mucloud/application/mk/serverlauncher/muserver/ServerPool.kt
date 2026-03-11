@@ -1,6 +1,7 @@
 package me.mucloud.application.mk.serverlauncher.muserver
 
 import com.google.gson.GsonBuilder
+import com.google.gson.reflect.TypeToken
 import me.mucloud.application.mk.serverlauncher.MuCoreMini
 import me.mucloud.application.mk.serverlauncher.mucore.external.MuLogger.info
 import me.mucloud.application.mk.serverlauncher.mucore.external.MuLogger.warn
@@ -13,6 +14,10 @@ object ServerPool {
 
     private const val LOG_PREFIX = "MuServer.Pool"
 
+    private val gson = GsonBuilder()
+        .setPrettyPrinting()
+        .registerTypeAdapter(MCJEServer::class.java, MCJEServerAdapter)
+        .create()
 
     private val ServerTypePool = mutableListOf<MCJEServerType>()
     private val Pool = mutableListOf<MCJEServer>()
@@ -62,7 +67,6 @@ object ServerPool {
     fun getAvailableTypes() = ServerTypePool
 
     fun scanServer(){
-        val gson = GsonBuilder().registerTypeAdapter(MCJEServer::class.java, MCJEServerAdapter).create()
         MuCoreMini.getMuCoreConfig().getServerFolder().listFiles().forEach fl@{ f ->
             if(f.isDirectory){
                 info(LOG_PREFIX, "Searching Directory >> $f")
