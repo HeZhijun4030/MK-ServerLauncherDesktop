@@ -18,6 +18,8 @@ import java.nio.charset.StandardCharsets
  */
 object EnvPool {
 
+    private const val LOG_PREFIX: String = "MuEnv.Pool"
+
     private val gson = GsonBuilder()
         .setPrettyPrinting()
         .registerTypeAdapter(JavaEnvironment::class.java, JavaEnvironmentAdapter)
@@ -54,7 +56,7 @@ object EnvPool {
     private fun scanRuntimeJavaEnv(){
         val runtime = System.getProperty("java.home")
         if(runtime == null){
-            warn("Cannot get Java Runtime Environment in using")
+            warn(LOG_PREFIX, "Cannot get Java Runtime Environment in using")
         }
         regEnv(JavaEnvironment("Runtime", runtime))
     }
@@ -93,7 +95,7 @@ object EnvPool {
     fun regEnv(env: JavaEnvironment){
         val target = jEnvs.find { it.name == env.name || it.getExecFolder() == env.getExecFolder() }
         if (target == null){
-            jEnvs.add(env)
+            if (!jEnvs.add(env)) warn(LOG_PREFIX, "Cannot register the Java Environment in ${env.name} because it has been registered.")
             save()
         }
     }

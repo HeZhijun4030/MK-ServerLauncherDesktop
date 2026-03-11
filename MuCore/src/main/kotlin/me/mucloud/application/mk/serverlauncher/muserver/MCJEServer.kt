@@ -22,6 +22,8 @@ import java.time.LocalDateTime
 import java.util.*
 import java.util.concurrent.TimeUnit
 
+private const val LOG_PREFIX: String = "MuServer"
+
 /**
  * # | MuExtension - MCJEServer
  * ## MC Java Edition Server
@@ -189,7 +191,7 @@ class MCJEServer(
                 if(targetFile.exists()){
                     rawServerConfig.add(FileConfig.of(targetFile).also { it.load() })
                 }else{
-                    warn("${targetFile.absolutePath} is not a valid MuServer config file")
+                    warn(LOG_PREFIX, "${targetFile.absolutePath} is not a valid MuServer config file")
                 }
             }
         }
@@ -204,7 +206,7 @@ class MCJEServer(
                 }
             }
             val thrown = UnsupportedOperationException()
-            err("The config File ($fileName) is not found in MuServer Configuration", thrown)
+            err(LOG_PREFIX, "The config File ($fileName) is not found in MuServer Configuration", thrown)
             throw thrown
         }
 
