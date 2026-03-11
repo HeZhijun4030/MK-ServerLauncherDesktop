@@ -39,8 +39,11 @@ val gson: Gson = GsonBuilder()
     .create()
 
 fun main() {
+var MuView_Port: Int = 20038
+    private set
+
     MuCore.start()
-    MuView = embeddedServer(Netty, port = MuCore.getMuCoreConfig().muCorePort, module = Application::module)
+    MuView = embeddedServer(Netty, port = MuView_Port, module = Application::module)
     MuView.addShutdownHook(MuView::stop)
     MuView.monitor.subscribe(ApplicationStopping) { MuCore.stop() }
     MuView.start(wait = true)

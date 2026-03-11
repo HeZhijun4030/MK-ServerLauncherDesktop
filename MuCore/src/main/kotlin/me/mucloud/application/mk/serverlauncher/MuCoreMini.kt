@@ -1,10 +1,10 @@
 package me.mucloud.application.mk.serverlauncher
 
+import me.mucloud.application.mk.serverlauncher.mucore.MuConfiguration
 import me.mucloud.application.mk.serverlauncher.mucore.external.AppInfoStatus
 import me.mucloud.application.mk.serverlauncher.mucore.external.SystemMonitor
-import me.mucloud.application.mk.serverlauncher.mucore.MuConfiguration
-import me.mucloud.application.mk.serverlauncher.muserver.ServerPool
 import me.mucloud.application.mk.serverlauncher.muenv.EnvPool
+import me.mucloud.application.mk.serverlauncher.muserver.ServerPool
 
 object MuCoreMini {
 
@@ -21,11 +21,8 @@ object MuCoreMini {
         EnvPool.save()
         ServerPool.saveServers()
         SystemMonitor.close()
-        MuCoreConfiguration.save()
     }
 
     fun getMuCoreInfo(): AppInfoStatus = MuCoreInfo
-
     fun getMuCoreConfig(): MuConfiguration = MuCoreConfiguration
-
 }
