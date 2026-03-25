@@ -13,12 +13,9 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 #include <QFontDatabase>
-#include <QApplication>
-#include <QLatin1String>
-#include <QFont>
-#include "DarkTheme.hpp"
+
 #include <QWidget>
-#include <QLabel>
+
 #include "spdlog/spdlog.h"
 #include <memory>
 
@@ -30,35 +27,38 @@ QT_BEGIN_NAMESPACE
  * 存在Ui::Form 类，
  * ui_client_UI.h由 uic 自动生成。
  */
-namespace Ui { class Form; }  
+namespace Ui
+{
+    class Form;
+}
+
 QT_END_NAMESPACE
 
 /**
  * @brief 深色主题样式表
  *
  * 定义应用程序的深色主题外观
- * anyway i like this :/
+ * anyway I like this :/
  */
-namespace CMS {
-
-
-/**
-     * @class MainWindow
-     * @brief 应用程序的主窗口类
-     *
-     * 继承自 QMainWindow，负责创建和管理应用程序的主界面
-     * UI 界面
-     * spdlog 日志系统
-     * 深色主题样式
-     *
-     * @note 使用 Ui::Form 类来访问 UI 控件*/
+namespace CMS
+{
+    /**
+         * @class MainWindow
+         * @brief 应用程序的主窗口类
+         *
+         * 继承自 QMainWindow，负责创建和管理应用程序的主界面
+         * UI 界面
+         * spdlog 日志系统
+         * 深色主题样式
+         *
+         * @note 使用 Ui::Form 类来访问 UI 控件*/
 
     class MainWindow : public QWidget
-    
-    {
-        Q_OBJECT    ///<Qt 元对象宏
 
-    public:    
+    {
+        Q_OBJECT ///<Qt 元对象宏
+
+    public:
         /**
         * @brief 构造函数
         *
@@ -70,12 +70,12 @@ namespace CMS {
         * @note 如果 logger 为 nullptr，将使用默认日志器或禁用日志功能
         * @see setupLogger()
         */
-        MainWindow(QWidget* parent = nullptr, std::shared_ptr<spdlog::logger> logger = nullptr);~MainWindow();    
+        explicit MainWindow(QWidget* parent = nullptr, const std::shared_ptr<spdlog::logger>& logger = nullptr);~MainWindow() override;
         void PushMessageToMainOverview(const QString& message);
-    private:        
-        std::shared_ptr<spdlog::logger> logger_; Ui::Form* ui; QString OverviewText;
-        void setupFonts();
 
+    private:
+        std::shared_ptr<spdlog::logger> logger_;Ui::Form* ui;QString OverviewText;
+        void setupFonts() const;
     };
 } // namespace CMS
 

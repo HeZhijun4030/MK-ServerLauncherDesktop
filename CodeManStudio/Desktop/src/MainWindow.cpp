@@ -10,9 +10,8 @@
  * 包括窗口初始化、日志设置和资源清理等功能
 */
 
-#include "ui_Client.h"  
+#include "ui_Client.h"
 #include "MainWindow.hpp"
-#include <QVBoxLayout>
 #include <QWidget>
 #include <QDebug>
 #include <QButtonGroup>
@@ -35,14 +34,10 @@ namespace CMS {
 	 * @note 日志器必须在构造函数中初始化，否则无法记录早期日志
 	 * @see ~MainWindow() 析构函数负责清理资源
 	 */
-	MainWindow::MainWindow(QWidget* parent, std::shared_ptr<spdlog::logger> logger)
-		: QWidget(parent), ui(new Ui::Form), logger_(logger)
+	MainWindow::MainWindow(QWidget* parent, const std::shared_ptr<spdlog::logger>& logger)
+		: QWidget(parent), logger_(logger), ui(new Ui::Form)
 	{
 		setupFonts();
-
-		QString OverviewText = "";
-
-
 
 
 		logger_->info("MainWindow Created");
@@ -56,15 +51,15 @@ namespace CMS {
 		buttongroup->addButton(ui->btnServer, 1);
 		buttongroup->addButton(ui->btnEnvironment, 2);
 		buttongroup->addButton(ui->btnAbout, 3);
-		QFile file(":/Dark/darkstyle.qss");
-		if (file.open(QFile::ReadOnly)) {
-			QString styleSheet = QLatin1String(file.readAll());
+		if (QFile file(":/Dark/darkstyle.qss"); file.open(QFile::ReadOnly)) {
+			const QString styleSheet = QLatin1String(file.readAll());
 			qApp->setStyleSheet(styleSheet);
 			file.close();
 		}
 		else {
 			qDebug() << "Failed to load stylesheet:" << file.errorString();
 		}
+
 		connect(buttongroup, QOverload<int>::of(&QButtonGroup::idClicked), this, [this](int id) {
 			ui->stackedWidget->setCurrentIndex(id);
 
@@ -77,15 +72,15 @@ namespace CMS {
 		delete ui;
 	}
 
-	void MainWindow::setupFonts()
+	void MainWindow::setupFonts() const
 	{
 		QFont appFont;
 
-		QString engFontPath = ":/res/JetBrainsMono-Medium.ttf";
-		QString chnFontPath = ":/res/SarasaMonoSC-SemiBold.ttf";
+		const QString engFontPath = ":/res/JetBrainsMono-Medium.ttf";
+		const QString chnFontPath = ":/res/SarasaMonoSC-SemiBold.ttf";
 
-		int engFontId = QFontDatabase::addApplicationFont(engFontPath);
-		int chnFontId = QFontDatabase::addApplicationFont(chnFontPath);
+		const int engFontId = QFontDatabase::addApplicationFont(engFontPath);
+		const int chnFontId = QFontDatabase::addApplicationFont(chnFontPath);
 
 		QStringList fontFallbackList;
 
