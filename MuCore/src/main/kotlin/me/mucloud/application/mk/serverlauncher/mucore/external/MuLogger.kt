@@ -6,18 +6,26 @@ import org.slf4j.LoggerFactory
 
 object MuLogger {
 
-    private val muLogger: Logger = LoggerFactory.getLogger("MK-ServerLauncher | ${MuCoreMini.getMuCoreInfo().core} | ")
+    private val muLogger: Logger = LoggerFactory.getLogger("${MuCoreMini.getMuCoreInfo().core} | ")
 
-    fun info(msg:String){
-        muLogger.info(msg)
+    fun info(logPrefix: String, msg:String){
+        muLogger.info("$logPrefix | $msg")
     }
 
-    fun warn(msg:String){
-        muLogger.warn(msg)
+    fun warn(logPrefix: String, msg:String){
+        muLogger.warn("$logPrefix | $msg")
     }
 
-    fun err(msg:String, throwable: Throwable){
-        muLogger.error(msg, throwable)
+    fun warn(logPrefix: String, msg:String, throwable: Throwable){
+        muLogger.warn("$logPrefix | $msg", throwable)
+    }
+
+    fun err(logPrefix: String, msg:String){
+        muLogger.error("$logPrefix | $msg")
+    }
+
+    fun err(logPrefix: String, msg:String, throwable: Throwable){
+        muLogger.error("$logPrefix | $msg", throwable)
     }
 
 }

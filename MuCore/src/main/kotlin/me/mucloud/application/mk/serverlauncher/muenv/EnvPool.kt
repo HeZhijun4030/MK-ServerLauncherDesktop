@@ -1,13 +1,11 @@
 package me.mucloud.application.mk.serverlauncher.muenv
 
-import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.google.gson.reflect.TypeToken
+import me.mucloud.application.mk.serverlauncher.mucore.external.MuLogger.warn
 import me.mucloud.application.mk.serverlauncher.muenv.EnvPool.envFile
 import me.mucloud.application.mk.serverlauncher.muenv.EnvPool.jEnvs
 import java.io.File
-import java.io.FileReader
-import java.io.FileWriter
 import java.nio.charset.StandardCharsets
 
 /**
@@ -20,15 +18,24 @@ import java.nio.charset.StandardCharsets
  */
 object EnvPool {
 
+    private const val LOG_PREFIX: String = "MuEnv.Pool"
+
+    private val gson = GsonBuilder()
+        .setPrettyPrinting()
+        .registerTypeAdapter(JavaEnvironment::class.java, JavaEnvironmentAdapter)
+        .create()
+
     private val jEnvs: MutableList<JavaEnvironment> = mutableListOf() // In-Memory storage
     private val envFile: File = File("env.json") // Persistent storage file
     
     init {
         if(!envFile.exists()) {
             envFile.createNewFile()
-            FileWriter(envFile).apply { write("[]"); flush() }
         }
-        scanLocalJavaEnv()
+        scanRuntimeJavaEnv()
+        if (!scanLocalJavaEnv()) {
+            envFile.writeText("[]")
+        }
     }
 
     /**
@@ -40,9 +47,18 @@ object EnvPool {
      *
      * This Function Implementation may change Frequently
      */
-    private fun scanLocalJavaEnv(){
-        val sysEnvPath = System.getenv("JAVA_HOME")
-        jEnvs.add(JavaEnvironment("SysEnv", sysEnvPath))
+    private fun scanLocalJavaEnv(): Boolean{
+        val sysEnvPath = System.getenv("JAVA_HOME") ?: return false
+        regEnv(JavaEnvironment("SysEnv", sysEnvPath))
+        return true
+    }
+
+    private fun scanRuntimeJavaEnv(){
+        val runtime = System.getProperty("java.home")
+        if(runtime == null){
+            warn(LOG_PREFIX, "Cannot get Java Runtime Environment in using")
+        }
+        regEnv(JavaEnvironment("Runtime", runtime))
     }
 
     /**
@@ -52,8 +68,8 @@ object EnvPool {
      */
     fun scanEnv() {
         if(envFile.exists()){
-            Gson().fromJson<List<JavaEnvironment>>(
-                FileReader(envFile, StandardCharsets.UTF_8),
+            gson.fromJson<List<JavaEnvironment>>(
+                envFile.readText(StandardCharsets.UTF_8),
                 object : TypeToken<List<JavaEnvironment>>(){}.type
             ).forEach{ e ->
                 jEnvs.add(e)
@@ -66,14 +82,7 @@ object EnvPool {
      */
     fun save(){
         if(envFile.exists()){
-            FileWriter(envFile, StandardCharsets.UTF_8).apply {
-                write(GsonBuilder()
-                    .registerTypeAdapter(JavaEnvironment::class.java, JavaEnvironmentAdapter)
-                    .setPrettyPrinting()
-                    .create()
-                    .toJson(jEnvs))
-                flush()
-            }
+            envFile.writeText(gson.toJson(jEnvs, object : TypeToken<List<JavaEnvironment>>(){}.type))
         }
     }
 
@@ -84,8 +93,9 @@ object EnvPool {
     }
 
     fun regEnv(env: JavaEnvironment){
-        jEnvs.find { it.name == env.name || it.getExecFolder() == env.getExecFolder() } ?: {
-            jEnvs.add(env)
+        val target = jEnvs.find { it.name == env.name || it.getExecFolder() == env.getExecFolder() }
+        if (target == null){
+            if (!jEnvs.add(env)) warn(LOG_PREFIX, "Cannot register the Java Environment in ${env.name} because it has been registered.")
             save()
         }
     }

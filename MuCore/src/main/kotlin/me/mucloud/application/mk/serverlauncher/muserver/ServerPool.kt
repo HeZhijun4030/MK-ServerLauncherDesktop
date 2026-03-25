@@ -1,6 +1,7 @@
 package me.mucloud.application.mk.serverlauncher.muserver
 
 import com.google.gson.GsonBuilder
+import com.google.gson.reflect.TypeToken
 import me.mucloud.application.mk.serverlauncher.MuCoreMini
 import me.mucloud.application.mk.serverlauncher.mucore.external.MuLogger.info
 import me.mucloud.application.mk.serverlauncher.mucore.external.MuLogger.warn
@@ -10,6 +11,13 @@ import java.io.FileReader
 import java.nio.charset.StandardCharsets
 
 object ServerPool {
+
+    private const val LOG_PREFIX = "MuServer.Pool"
+
+    private val gson = GsonBuilder()
+        .setPrettyPrinting()
+        .registerTypeAdapter(MCJEServer::class.java, MCJEServerAdapter)
+        .create()
 
     private val ServerTypePool = mutableListOf<MCJEServerType>()
     private val Pool = mutableListOf<MCJEServer>()
@@ -59,16 +67,15 @@ object ServerPool {
     fun getAvailableTypes() = ServerTypePool
 
     fun scanServer(){
-        val gson = GsonBuilder().registerTypeAdapter(MCJEServer::class.java, MCJEServerAdapter).create()
         MuCoreMini.getMuCoreConfig().getServerFolder().listFiles().forEach fl@{ f ->
             if(f.isDirectory){
-                info("Searching Directory >> $f")
+                info(LOG_PREFIX, "Searching Directory >> $f")
                 val target = f.listFiles().find { sf -> sf.name == "MK-ServerLauncher.json" }
                 if(target == null){
-                    warn("Skipped")
+                    warn(LOG_PREFIX, "Skipped")
                 }else{
-                    info("Introspecting Server Description >> $f")
-                    Pool.add(gson.fromJson(FileReader(target, StandardCharsets.UTF_8), object: com.google.gson.reflect.TypeToken<MCJEServer>(){}))
+                    info(LOG_PREFIX, "Introspecting Server Description >> $f")
+                    Pool.add(gson.fromJson(FileReader(target, StandardCharsets.UTF_8), object: TypeToken<MCJEServer>(){}))
                 }
             }
         }
@@ -80,7 +87,7 @@ object ServerPool {
 
     fun addType(type: MCJEServerType){
         if (ServerTypePool.contains(type)){
-            warn("Ambiguous Server Type Detected >> ${type.id}")
+            warn(LOG_PREFIX, "Ambiguous Server Type Detected >> ${type.id}")
         }
     }
 }

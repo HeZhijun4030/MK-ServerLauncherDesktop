@@ -1,6 +1,10 @@
 package me.mucloud.application.mk.serverlauncher.mupacket.api
 
+import com.google.gson.GsonBuilder
 import com.google.gson.JsonObject
+import me.mucloud.application.mk.serverlauncher.mupacket.api.MuPacketFactory.MPListeners
+import me.mucloud.application.mk.serverlauncher.mupacket.api.MuPacketFactory.pattern
+import me.mucloud.application.mk.serverlauncher.mupacket.api.MuPacketFactory.toPacket
 import java.util.concurrent.ConcurrentHashMap
 
 /**
@@ -79,5 +83,19 @@ object MuPacketFactory {
         if(MPListeners.containsKey(type)) {
             MPListeners[type]?.forEach { it(mp) }
         }
+    }
+
+    /**
+     * ### MuPacket Gson Adapter Register
+     *
+     * regMuPacket to Gson Builder Adapter Provider with MuPacket Class
+     *
+     * @author Mu_Cloud
+     * @param builder Raw Gson Builder
+     * @return The Gson Builder [builder] after register
+     * @since RainyZone V1 | DEV.1
+     */
+    fun addMuPacketAdapter(builder: GsonBuilder): GsonBuilder = builder.apply {
+        registerTypeAdapter(MuPacketInfo::class.java, MuPacketAdapter)
     }
 }

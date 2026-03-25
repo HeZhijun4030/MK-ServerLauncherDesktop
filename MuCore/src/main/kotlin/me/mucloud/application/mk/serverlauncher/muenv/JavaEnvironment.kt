@@ -2,6 +2,8 @@ package me.mucloud.application.mk.serverlauncher.muenv
 
 import java.io.File
 import java.io.FileReader
+import kotlin.io.path.Path
+import kotlin.io.path.exists
 
 /**
  * # | MuExtension - MCJEServer
@@ -68,4 +70,6 @@ class JavaEnvironment(
      * @return The executable file of JavaEnvironment, which usually refers to the "java.exe" file
      */
     fun getAbsoluteExecPath(): String = getExecFolder().resolve("bin/java.exe").absolutePath
+
+    fun checkAvailable(): Boolean = getExecFolder().exists() && Path(getAbsoluteExecPath()).exists()
 }

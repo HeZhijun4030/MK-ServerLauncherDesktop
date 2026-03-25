@@ -16,9 +16,9 @@ import java.lang.management.ManagementFactory
 
 object SystemMonitor{
 
-    private var Interval: Int = MuCoreMini.getMuCoreConfig().systemMonitorInterval // Seconds
+    private const val INTERVAL: Int = 3 // Seconds
     private var isActive: Boolean = false
-    private var MonitorFlow: MutableStateFlow<StatusPacket> = MutableStateFlow(getCurrentStatus())
+    private val MonitorFlow: MutableStateFlow<StatusPacket> = MutableStateFlow(getCurrentStatus())
 
     private fun getCurrentStatus(): StatusPacket {
         val os = ManagementFactory.getOperatingSystemMXBean() as OperatingSystemMXBean
@@ -39,7 +39,7 @@ object SystemMonitor{
         CoroutineScope(SupervisorJob() + Dispatchers.Default).launch {
             while(isActive){
                 MonitorFlow.emit(getCurrentStatus())
-                delay(Interval.toLong() * 1000)
+                delay(INTERVAL.toLong() * 1000)
             }
         }
     }

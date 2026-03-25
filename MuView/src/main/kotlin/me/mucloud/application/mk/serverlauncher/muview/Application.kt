@@ -16,6 +16,7 @@ import io.ktor.server.websocket.*
 import me.mucloud.application.mk.serverlauncher.MuCoreMini
 import me.mucloud.application.mk.serverlauncher.muenv.JavaEnvironment
 import me.mucloud.application.mk.serverlauncher.muenv.JavaEnvironmentAdapter
+import me.mucloud.application.mk.serverlauncher.mupacket.api.MuPacketFactory
 import me.mucloud.application.mk.serverlauncher.muserver.MCJEServer
 import me.mucloud.application.mk.serverlauncher.muserver.MCJEServerAdapter
 import me.mucloud.application.mk.serverlauncher.muserver.MCJEServerType
@@ -27,19 +28,48 @@ import me.mucloud.application.mk.serverlauncher.muview.view.initServerRoute
 import kotlin.time.Duration.Companion.seconds
 
 val MuCore: MuCoreMini = MuCoreMini
+lateinit var MuView: EmbeddedServer<NettyApplicationEngine, NettyApplicationEngine.Configuration>
 
 val gson: Gson = GsonBuilder()
     .setPrettyPrinting()
     .registerTypeAdapter(JavaEnvironment::class.java, JavaEnvironmentAdapter)
     .registerTypeAdapter(MCJEServer::class.java, MCJEServerAdapter)
     .registerTypeAdapter(MCJEServerType::class.java, MCJEServerTypeSerializer)
+    .also { MuPacketFactory.addMuPacketAdapter(it) }
     .create()
 
-fun main() {
+var MuView_Port: Int = 20038
+    private set
+
+fun readAndCheckLaunchArgs(args: Array<String>): Boolean{
+    val portArgs = arrayOf("p", "port")
+    if (args.all { it.matches(Regex("^(-[a-zA-Z]+):([a-zA-Z0-9]+)$")) }) {
+        args.forEach { a ->
+            when(a){
+                in portArgs -> a.toIntOrNull().let {
+                    if (it == null){
+                        println("Invalid port, set to default (20038)")
+                    }else{
+                        MuView_Port = it
+                    }
+                }
+                else -> println("Invalid Arg ($a), Ignored.")
+            }
+        }
+        return true
+    }else{
+        println("Wrong Usage: java -jar mksl.jar [-[optionKey]:[optionValue] ...]")
+        return false
+    }
+}
+
+fun main(args: Array<String>) {
+    if (!readAndCheckLaunchArgs(args)) return
     MuCore.start()
-    embeddedServer(Netty, port = MuCore.getMuCoreConfig().muCorePort, module = Application::module)
-        .start(wait = true)
-        .addShutdownHook(MuCore::stop)
+    MuView = embeddedServer(Netty, port = MuView_Port, module = Application::module)
+    MuView.addShutdownHook(MuView::stop)
+    MuView.monitor.subscribe(ApplicationStopping) { MuCore.stop() }
+    MuView.start(wait = true)
 }
 
 fun Application.installPlugins(){
@@ -58,6 +88,7 @@ fun Application.installPlugins(){
             registerTypeAdapter(JavaEnvironment::class.java, JavaEnvironmentAdapter)
             registerTypeAdapter(MCJEServer::class.java, MCJEServerAdapter)
             registerTypeAdapter(MCJEServerType::class.java, MCJEServerTypeSerializer)
+                .also { MuPacketFactory.addMuPacketAdapter(it) }
         }
     }
     install(WebSockets) {
