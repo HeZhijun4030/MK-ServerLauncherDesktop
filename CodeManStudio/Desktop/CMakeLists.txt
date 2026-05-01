@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.16)
 project(CMS)
 
 set(CMSUTILS_DIR "${CMAKE_CURRENT_SOURCE_DIR}/CMSToolkit")
-
+set(YAML_DIR "${CMAKE_CURRENT_SOURCE_DIR}")
 add_library(CMSUtils SHARED IMPORTED)
 
 set_target_properties(CMSUtils PROPERTIES
@@ -18,6 +18,21 @@ set_target_properties(CMSUtils PROPERTIES
         INTERFACE_INCLUDE_DIRECTORIES "${CMSUTILS_DIR}/include"
 )
 
+if(CMAKE_BUILD_TYPE STREQUAL "Debug")
+    set(YAML_LIBRARY "${YAML_DIR}/lib/yaml-cppd.lib")
+    set(YAML_DLL "${YAML_DIR}/bin/yaml-cppd.dll")
+else()
+    set(YAML_LIBRARY "${YAML_DIR}/lib/yaml-cpp.lib")
+    set(YAML_DLL "${YAML_DIR}/bin/yaml-cpp.dll")
+endif()
+
+add_library(yaml-cpp SHARED IMPORTED)
+
+set_target_properties(yaml-cpp PROPERTIES
+        IMPORTED_LOCATION "${YAML_DLL}"
+        IMPORTED_IMPLIB   "${YAML_LIBRARY}"
+        INTERFACE_INCLUDE_DIRECTORIES "${YAML_DIR}/include"
+)
 
 
 set(CMAKE_CXX_STANDARD 17)
@@ -46,6 +61,7 @@ target_link_libraries(${PROJECT_NAME} PRIVATE
         Qt6::WebSockets
         spdlog::spdlog
         CMSUtils
+        yaml-cpp
 )
 
 target_include_directories(${PROJECT_NAME} PRIVATE

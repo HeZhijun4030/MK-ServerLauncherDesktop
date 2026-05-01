@@ -9,12 +9,14 @@
  * 该文件是应用程序的入口点，负责初始化Qt环境、
  * 设置日志系统和创建主窗口。
  */
+
 #include <iostream>
 #include <cms_toolkit_dll.hpp>
 #include <QApplication>
 #include "MainWindow.hpp"
 #include "spdlog/sinks/stdout_color_sinks.h"
 #include "WebSocketManager.hpp"
+#include <yaml-cpp/yaml.h>
 /**
  * @brief 应用程序入口点
  *
@@ -44,7 +46,7 @@ int main(int argc, char* argv[])
     //父窗口为nullptr，表示这是一个顶级窗口
     CMS::MainWindow window(nullptr, MainLogger);
 
-    CMS::WebSocketManager wsManager(&window, 4030, "127.0.0.1", 4030, "", serverLogger, clientLogger);
+    CMS::WebSocketManager wsManager(&window, 20038, "127.0.0.1", 4030, "/api/v1/overview", serverLogger, clientLogger);
     window.show();
 
     const QString idk = R"(# 系统启动

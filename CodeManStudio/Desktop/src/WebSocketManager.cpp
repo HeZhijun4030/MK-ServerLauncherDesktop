@@ -24,7 +24,7 @@ namespace CMS
         ClientLogger_(ClientLogger)
 
     {
-        Muurl.setScheme("ws");
+        Muurl.setScheme("wss");
         Muurl.setHost("localhost");
         Muurl.setPort(Targetport);
         Muurl.setPath(path);
@@ -84,22 +84,20 @@ namespace CMS
         ClientLogger_->info("Local address:" + client_->localAddress().toString().toStdString());
         ClientLogger_->info("Local port:" + QString::number(client_->localPort()).toStdString());
 
-        client_->sendTextMessage("Hello Server!");
+        client_->sendTextMessage("Hello MuCloud!");
     }
 
     void WebSocketManager::OnDisconnectedFromServer() const
     {
         ClientLogger_->info("=== Disconnect to server ===");
 
-        client_->abort();
     }
 
     void WebSocketManager::MessageFromServer(const QString& message) const
     {
         ClientLogger_->info("=== Message From Server ===");
         ClientLogger_->info("{}", message.toStdString());
-        // TODO(Hzj) : hey JUST Let Him CLOSE!!!
-        client_->close();
+
     }
 
     void WebSocketManager::MessageFromClient(const QString& message) const
@@ -122,7 +120,7 @@ namespace CMS
             // TODO(Hzj) : hey JUST Let Him CLOSE!!!
 
             extra->close();
-            extra->deleteLater();
+
             return;
         }
 
