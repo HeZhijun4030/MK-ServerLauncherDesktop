@@ -1,6 +1,6 @@
 plugins {
-    kotlin("jvm") version libs.versions.kotlin
-    id("io.ktor.plugin") version libs.versions.ktor
+    kotlin("jvm")
+    alias(libs.plugins.ktor.plugin)
     alias(libs.plugins.kotlin.serialization)
 }
 
@@ -22,7 +22,6 @@ repositories {
 dependencies {
     implementation(project(":MuCore"))
     implementation(libs.bundles.ktor.pack)
-    implementation(libs.bundles.gson.pack)
 
     implementation("ch.qos.logback:logback-classic:1.5.13")
     testImplementation("io.ktor:ktor-server-test-host")
