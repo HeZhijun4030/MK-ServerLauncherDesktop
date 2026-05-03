@@ -1,3 +1,9 @@
+/**
+ * @file   cms_toolkit_dll.cpp
+ * @brief  CMS Cross-platform C++ utility toolkit dll head
+ * @author HeZhijun4030
+ * @date   2026-05-03
+ */
 #ifndef CMS_UTILS_DLL_HPP
 #define CMS_UTILS_DLL_HPP
 
@@ -28,12 +34,9 @@ namespace cms
         class CMS_API BaseTween
         {
         public:
-
+            enum Eas{In,Out};
             // TODO(Hzj) Ease in/out more curve
-            enum Curve {
-                Linear,
-                QuadIn
-            };
+            enum Curve {Linear,QuadIn,Qurd};
 
             explicit BaseTween(const float& st = 0,const float& fi = 0,const float& du = 0,const Curve& cu=Curve::Linear);
 
@@ -62,36 +65,48 @@ namespace cms
 
     }
 
-    /*
-     清屏void
-    */
+
     namespace terminal
     {
+        /**
+         * @brief Clear terminal screen in Linux or Windows
+         */
         CMS_API void ClearScreen();
     }
 
     namespace io
     {
-        /*
-        用来处理输入异常清空
-        */
+        /**
+         * @brief Clear input when error was happened
+         */
         CMS_API void ClearInput();
 
-        /*
-        参数:
-        std::string 提示信息 -> T
-        */
+        /**
+         * @brief Safely reads user input with EOF detection
+         * @tparam T      Target data type
+         * @param Prompt  Prompt message to display
+         * @return T      Valid input value
+         * @throws std::runtime_error If input stream reaches EOF
+         *
+         * @note  Performs type validation and extra character detection
+         * @warning Does NOT support std::string type
+         * @see ClearInput()
+         */
         template <typename T>
         T SafeInput(const std::string& Prompt)
         {
-            T Resault;
+            T Result;
             while (true)
             {
-                if (std::cin >> Resault){if (std::cin.peek() != '\n'){std::cout << "More unknow chars , plz try again" << std::endl;ClearInput();continue;}return Resault;}
-                std::cout << "Input Error , plz try again" << std::endl;
-                ClearInput();
+                std::cout << Prompt;if (std::cin.eof())throw std::runtime_error("Input stream closed unexpectedly");
+                if (std::cin >> Result)
+                {
+                    int next = std::cin.peek();if (next != '\n' && next != EOF){std::cout << "Extra characters detected, please try again" << std::endl;ClearInput();continue;}return Result;
+                }
+                std::cout << "Input type error, please try again" << std::endl;ClearInput();
+
             }
-        } //SafeInput
+        }//SafeInput
     }
 } // namespace cms
 
